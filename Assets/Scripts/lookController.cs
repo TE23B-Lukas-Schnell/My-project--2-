@@ -32,4 +32,12 @@ public class lookController : MonoBehaviour
         lookInput = Value.Get<Vector2>();
     }
 
+    void OnUse(InputValue Value)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(head.transform.position, head.transform.forward, out hit,3))
+        {
+            print(hit);
+        }
+    }
 }

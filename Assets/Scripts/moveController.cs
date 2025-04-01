@@ -18,6 +18,8 @@ public class moveController : MonoBehaviour
 
     float velocityY = 0;
 
+    bool isSliding = false;
+
     void Start()
     {
 
@@ -25,6 +27,7 @@ public class moveController : MonoBehaviour
 
     void FixedUpdate()
     {
+
         velocityY += Physics.gravity.y * Time.deltaTime;
 
         velocityY = 0;
@@ -34,25 +37,33 @@ public class moveController : MonoBehaviour
             jumpInput = false;
         }
 
-        // find target velocity
-        Vector3 currentVelocity = rigidBody.velocity;
-        Vector3 targetVelocity;
-        targetVelocity = new Vector3(moveInput.x * moveForce, velocityY, moveInput.y * moveForce);
 
-        // align direction
-        targetVelocity = transform.TransformDirection(targetVelocity);
+        if (!isSliding)
+        {
+            // find target velocity
+            Vector3 currentVelocity = rigidBody.velocity;
+            Vector3 targetVelocity;
+            targetVelocity = new Vector3(moveInput.x * moveForce, velocityY, moveInput.y * moveForce);
 
-        // calculate forces
-        Vector3 velocityChange = (targetVelocity - currentVelocity);
-        velocityChange = new Vector3(velocityChange.x, velocityY, velocityChange.z);
+            // align direction
+            targetVelocity = transform.TransformDirection(targetVelocity);
 
-        // add force
-        rigidBody.AddForce(velocityChange, ForceMode.Impulse);
+            // calculate forces
+            Vector3 velocityChange = (targetVelocity - currentVelocity);
+            velocityChange = new Vector3(velocityChange.x, velocityY, velocityChange.z);
+
+            // add force
+            rigidBody.AddForce(velocityChange, ForceMode.Impulse);
+        }
+        else
+        {
+
+        }
     }
 
     bool isGrounded()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, RaycastFloorCheckLength))return true;
+        if (Physics.Raycast(transform.position, Vector3.down, RaycastFloorCheckLength)) return true;
         else return false;
     }
 
@@ -64,5 +75,10 @@ public class moveController : MonoBehaviour
     void OnJump(InputValue value)
     {
         jumpInput = true;
+    }
+
+    void OnSlide(InputValue value)
+    {
+        // if(value)
     }
 }
